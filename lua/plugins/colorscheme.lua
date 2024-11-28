@@ -27,7 +27,7 @@ return {
     {
         "navarasu/onedark.nvim",
 		config = function()
-            require("bamboo").setup({
+            require("onedark").setup({
                 transparent = true
             })
 		end
