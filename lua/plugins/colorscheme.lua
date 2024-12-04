@@ -4,7 +4,7 @@ return {
 		priority = 1000,
 		config = function()
             require("bamboo").setup({
-                transparent = true
+                transparent = false
             })
 			vim.cmd([[colorscheme bamboo]])
 		end
@@ -15,7 +15,7 @@ return {
 		config = function()
             require("rose-pine").setup({
                 styles = {
-                    transparency = true,
+                    transparency = false,
                 },
             })
 		end

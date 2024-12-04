@@ -35,17 +35,15 @@ return {
 			completion = {
 				completeopt = "menu,menuone,preview,noselect",
 			},
-			mapping = ({
+			mapping = cmp.mapping.preset.insert {
       				["<C-p>"] = cmp.mapping.select_prev_item(),
       				["<C-n>"] = cmp.mapping.select_next_item(),
       				["<C-d>"] = cmp.mapping.scroll_docs(-4),
+                    ['<C-y>'] = cmp.mapping.confirm{ select = true },
+      				["<C-Space>"] = cmp.mapping.complete {},
       				["<C-f>"] = cmp.mapping.scroll_docs(4),
-      				["<C-Space>"] = cmp.mapping.complete(),
       				-- ["<Esc>"] = cmp.mapping.close(),
-      				["<Tab>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "s" }),
-      				["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "s" }),
-				['<CR>'] = cmp.mapping.confirm({ select = true }),
-   			}),
+   			},
 			sources = cmp.config.sources({
 				{ name = "nvim_lsp" },
 				{ name = "buffer" },
