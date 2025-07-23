@@ -1,12 +1,12 @@
 return {
 	{
 		"ribru17/bamboo.nvim",
-		priority = 1000,
+        priority = 1000,
 		config = function()
             require("bamboo").setup({
                 transparent = false
             })
-			vim.cmd([[colorscheme bamboo]])
+			-- vim.cmd([[colorscheme bamboo]])
 		end
 	},
     {
@@ -19,6 +19,16 @@ return {
                 },
             })
 		end
+    },
+    {
+        "EdenEast/nightfox.nvim",
+        priority = 1000,
+        config = function()
+            vim.cmd.colorscheme "carbonfox"
+        end
+    },
+    {
+        'projekt0n/github-nvim-theme', name = 'github-theme',
     },
 	{
 		"catppuccin/nvim",

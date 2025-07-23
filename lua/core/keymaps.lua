@@ -11,6 +11,9 @@ vim.keymap.set('n', '<M-j>', [[<Cmd>wincmd j<CR>]])
 vim.keymap.set('n', '<M-k>', [[<Cmd>wincmd k<CR>]])
 vim.keymap.set('n', '<M-l>', [[<Cmd>wincmd l<CR>]])
 
+-- copy to clipboard
+vim.api.nvim_set_keymap('v', '<M-c>', '"+y', { noremap = true, silent = true })
+
 -- split controls
 vim.keymap.set('n', '<leader>sh', '<Cmd>vsplit<CR>')
 vim.keymap.set('n', '<leader>sv', '<Cmd>split<CR>')
