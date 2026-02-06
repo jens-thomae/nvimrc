@@ -6,16 +6,16 @@ return {
             require("bamboo").setup({
                 transparent = false
             })
-			-- vim.cmd([[colorscheme bamboo]])
+            require('bamboo').load()
+			vim.cmd([[colorscheme bamboo]])
 		end
-	},
-    {
+	}, {
         "rose-pine/neovim",
         name = "rose-pine",
 		config = function()
             require("rose-pine").setup({
                 styles = {
-                    transparency = false,
+                    transparency = true,
                 },
             })
 		end
@@ -24,11 +24,12 @@ return {
         "EdenEast/nightfox.nvim",
         priority = 1000,
         config = function()
-            vim.cmd.colorscheme "carbonfox"
+            -- vim.cmd.colorscheme "carbonfox"
         end
     },
     {
-        'projekt0n/github-nvim-theme', name = 'github-theme',
+        'projekt0n/github-nvim-theme',
+        name = 'github-theme',
     },
 	{
 		"catppuccin/nvim",
@@ -40,10 +41,10 @@ return {
 		"NTBBloodbath/doom-one.nvim",
 	},
     {
-        "nyoom-engineering/oxocarbon.nvim"
+        "nyoom-engineering/oxocarbon.nvim",
     },
     {
-        "bluz71/vim-moonfly-colors"
+        "bluz71/vim-moonfly-colors",
     },
     {
         "navarasu/onedark.nvim",
@@ -54,18 +55,18 @@ return {
 		end
     },
     {
-        "folke/tokyonight.nvim"
+        "folke/tokyonight.nvim",
     },
     {
-        "jacoborus/tender.vim"
+        "jacoborus/tender.vim",
     },
     {
-        "nanotech/jellybeans.vim"
+        "nanotech/jellybeans.vim",
     },
     {
-        "jaredgorski/SpaceCamp"
+        "jaredgorski/SpaceCamp",
     },
     {
-        "NTBBloodbath/doom-one.nvim"
+        "NTBBloodbath/doom-one.nvim",
     },
 }

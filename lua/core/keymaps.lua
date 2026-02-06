@@ -1,15 +1,15 @@
 -- Default global keys
 vim.g.mapleader = " "
-vim.keymap.set("n", ";", ":")
+-- vim.keymap.set("n", ";", ":")
 
 -- netrw
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
 
 -- window control in normal mode
-vim.keymap.set('n', '<M-h>', [[<Cmd>wincmd h<CR>]])
-vim.keymap.set('n', '<M-j>', [[<Cmd>wincmd j<CR>]])
-vim.keymap.set('n', '<M-k>', [[<Cmd>wincmd k<CR>]])
-vim.keymap.set('n', '<M-l>', [[<Cmd>wincmd l<CR>]])
+vim.keymap.set('n', '<leader>wh', [[<Cmd>wincmd h<CR>]])
+vim.keymap.set('n', '<leader>wj', [[<Cmd>wincmd j<CR>]])
+vim.keymap.set('n', '<leader>wk', [[<Cmd>wincmd k<CR>]])
+vim.keymap.set('n', '<leader>wl', [[<Cmd>wincmd l<CR>]])
 
 -- copy to clipboard
 vim.api.nvim_set_keymap('v', '<M-c>', '"+y', { noremap = true, silent = true })

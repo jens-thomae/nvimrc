@@ -8,6 +8,7 @@ return {
 	},
 	config = function()
 		local telescope = require("telescope")
+        local builtin = require("telescope.builtin")
 		-- local actions = require("telescope.actions")
 
 		telescope.setup()
@@ -18,7 +19,13 @@ return {
 		vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Fuzzy find recent files" })
 		vim.keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Fuzzy find string in cwd" })
 		vim.keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Fuzzy find string uder cursor in cwd" })
-		vim.keymap.set("n", "<leader>fn", "<cmd>Telescope colorscheme<cr>", { desc = "Fuzzy find all recent notifications" })
 		vim.keymap.set("n", "<leader>th", "<cmd>Telescope colorscheme<cr>", { desc = "Select a colorscheme" })
-	end,
+
+        vim.keymap.set("n", "<leader>fn", function()
+            builtin.lsp_document_symbols({
+                symbols = { "Method", "Function" },
+                default_text = ""
+            })
+        end, { desc = "List functions in current file" }) 
+    end,
 }
