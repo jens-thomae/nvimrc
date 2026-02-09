@@ -1,23 +1,23 @@
 return {
-	"williamboman/mason.nvim",
-
-	dependencies = {
-		"williamboman/mason-lspconfig.nvim",
-	},
-	config = function()
-		local mason = require("mason")
-		local mason_lspconfig = require("mason-lspconfig")
-
-		mason.setup({
+	{
+		"mason-org/mason.nvim",
+		opts = {
 			ui = {
 				icons = {
 					package_installed = "🟢",
 					package_pending = "🕐",
 					package_uninstalled = "🔴",
-				}
-			}
-		})
-		mason_lspconfig.setup({
+				},
+			},
+		},
+	},
+	{
+		"mason-org/mason-lspconfig.nvim",
+		dependencies = {
+			"mason-org/mason.nvim",
+			"neovim/nvim-lspconfig",
+		},
+		opts = {
 			ensure_installed = {
 				"ts_ls",
 				"html",
@@ -30,8 +30,7 @@ return {
 				"clangd",
 				"gopls",
 			},
-			-- auto install configured servers, not related to ensure_installed
 			automatic_installation = true,
-		})
-	end,
+		},
+	},
 }

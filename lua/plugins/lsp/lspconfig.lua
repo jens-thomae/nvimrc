@@ -6,188 +6,129 @@ return {
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 	},
 	config = function()
-		local lspconfig = require("lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
-    		local opts = { noremap = true, silent = true }
-    		local on_attach = function(client, bufnr)
-			opts.buffer = bufnr
+		-- LSP keybindings (applied when any LSP attaches to a buffer)
+		vim.api.nvim_create_autocmd("LspAttach", {
+			callback = function(args)
+				local bufnr = args.buf
+				local client = vim.lsp.get_client_by_id(args.data.client_id)
+				local opts = { buffer = bufnr, noremap = true, silent = true }
 
-      			-- set keybinds
-      			opts.desc = "Show LSP references"
-      			vim.keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
+				opts.desc = "Show LSP references"
+				vim.keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
 
-      			opts.desc = "Go to declaration"
-      			vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
+				opts.desc = "Go to declaration"
+				vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
 
-      			opts.desc = "Show LSP definitions"
-      			vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
+				opts.desc = "Show LSP definitions"
+				vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
 
-      			opts.desc = "Show LSP implementations"
-      			vim.keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
+				opts.desc = "Show LSP implementations"
+				vim.keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
 
-      			opts.desc = "Show LSP type definitions"
-      			vim.keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
+				opts.desc = "Show LSP type definitions"
+				vim.keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
 
-      			opts.desc = "See available code actions"
-      			vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
+				opts.desc = "See available code actions"
+				vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 
-      			opts.desc = "Smart rename"
-      			vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
+				opts.desc = "Smart rename"
+				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 
-      			opts.desc = "Show buffer diagnostics"
-      			vim.keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
+				opts.desc = "Show buffer diagnostics"
+				vim.keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
 
-      			opts.desc = "Show line diagnostics"
-      			vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
+				opts.desc = "Show line diagnostics"
+				vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
 
-      			opts.desc = "Go to previous diagnostic"
-      			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
+				opts.desc = "Go to previous diagnostic"
+				vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
 
-      			opts.desc = "Go to next diagnostic"
-      			vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
+				opts.desc = "Go to next diagnostic"
+				vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 
-      			opts.desc = "Show documentation for what is under cursor"
-      			vim.keymap.set("n", "K", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
+				opts.desc = "Show documentation for what is under cursor"
+				vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
-      			opts.desc = "Restart LSP"
-      			vim.keymap.set("n", "<leader>rs", "<cmd>LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+				opts.desc = "Restart LSP"
+				vim.keymap.set("n", "<leader>rs", "<cmd>LspRestart<CR>", opts)
+
+				-- Eslint: auto fix on save
+				if client and client.name == "eslint" then
+					vim.api.nvim_create_autocmd("BufWritePre", {
+						buffer = bufnr,
+						command = "EslintFixAll",
+					})
+				end
+			end,
+		})
+
+		-- Diagnostic signs in the gutter
+		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+		for type, icon in pairs(signs) do
+			local hl = "DiagnosticSign" .. type
+			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
-		-- used to enable autocompletion (assign to every lsp server config)
- 	   	local capabilities = cmp_nvim_lsp.default_capabilities()
-
-    		-- Change the Diagnostic symbols in the sign column (gutter)
-    		-- (not in youtube nvim video)
-    		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-    		for type, icon in pairs(signs) do
-    			local hl = "DiagnosticSign" .. type
-    			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-    		end
-
-		-- Connecting the language servers with nvim-cmp
-		lspconfig["ts_ls"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
+		-- Global capabilities for all LSP servers (enables nvim-cmp completion)
+		vim.lsp.config("*", {
+			capabilities = cmp_nvim_lsp.default_capabilities(),
 		})
 
-		lspconfig["html"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
-
-		lspconfig["cssls"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
-
-		lspconfig["tailwindcss"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
-
-		lspconfig["svelte"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
-
-		lspconfig["lua_ls"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-			settings  = {
+		-- Server-specific overrides (only needed for servers with custom settings)
+		vim.lsp.config("lua_ls", {
+			settings = {
 				Lua = {
 					diagnostics = {
-						globals = { "vim" }
-					}
-				}
-			}
+						globals = { "vim" },
+					},
+				},
+			},
 		})
 
-		lspconfig["pyright"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
+		local eslint_customizations = {
+			{ rule = "style/*", severity = "off", fixable = true },
+			{ rule = "format/*", severity = "off", fixable = true },
+			{ rule = "*-indent", severity = "off", fixable = true },
+			{ rule = "*-spacing", severity = "off", fixable = true },
+			{ rule = "*-spaces", severity = "off", fixable = true },
+			{ rule = "*-order", severity = "off", fixable = true },
+			{ rule = "*-dangle", severity = "off", fixable = true },
+			{ rule = "*-newline", severity = "off", fixable = true },
+			{ rule = "*quotes", severity = "off", fixable = true },
+			{ rule = "*semi", severity = "off", fixable = true },
+		}
+
+		vim.lsp.config("eslint", {
+			filetypes = {
+				"javascript",
+				"javascriptreact",
+				"javascript.jsx",
+				"typescript",
+				"typescriptreact",
+				"typescript.tsx",
+				"vue",
+				"html",
+				"markdown",
+				"json",
+				"jsonc",
+				"yaml",
+				"toml",
+				"xml",
+				"gql",
+				"graphql",
+				"astro",
+				"svelte",
+				"css",
+				"less",
+				"scss",
+				"pcss",
+				"postcss",
+			},
+			settings = {
+				rulesCustomizations = eslint_customizations,
+			},
 		})
-
-		lspconfig["rust_analyzer"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
-
-		lspconfig["clangd"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
-
-		lspconfig["gopls"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
-
-		lspconfig["jdtls"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
-
-		-- lspconfig["angularls"].setup({
-		-- 	capabilities = capabilities,
-		-- 	on_attach = on_attach,
-		-- })
-
-        --Eslint auto fix on save
-        local customizations = {
-          { rule = 'style/*', severity = 'off', fixable = true },
-          { rule = 'format/*', severity = 'off', fixable = true },
-          { rule = '*-indent', severity = 'off', fixable = true },
-          { rule = '*-spacing', severity = 'off', fixable = true },
-          { rule = '*-spaces', severity = 'off', fixable = true },
-          { rule = '*-order', severity = 'off', fixable = true },
-          { rule = '*-dangle', severity = 'off', fixable = true },
-          { rule = '*-newline', severity = 'off', fixable = true },
-          { rule = '*quotes', severity = 'off', fixable = true },
-          { rule = '*semi', severity = 'off', fixable = true },
-        }
-
-        -- Enable eslint for all supported languages
-        lspconfig["eslint"].setup(
-          {
-			capabilities = capabilities,
-            on_attach = function(client, bufnr)
-            vim.api.nvim_create_autocmd("BufWritePre", {
-              buffer = bufnr,
-              command = "EslintFixAll",
-            })
-          end,
-
-            filetypes = {
-              "javascript",
-              "javascriptreact",
-              "javascript.jsx",
-              "typescript",
-              "typescriptreact",
-              "typescript.tsx",
-              "vue",
-              "html",
-              "markdown",
-              "json",
-              "jsonc",
-              "yaml",
-              "toml",
-              "xml",
-              "gql",
-              "graphql",
-              "astro",
-              "svelte",
-              "css",
-              "less",
-              "scss",
-              "pcss",
-              "postcss"
-            },
-            settings = {
-              -- Silent the stylistic rules in you IDE, but still auto fix them
-              rulesCustomizations = customizations,
-            },
-          }
-        )
-	end
+	end,
 }
