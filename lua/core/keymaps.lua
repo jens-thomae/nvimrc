@@ -25,7 +25,7 @@ vim.keymap.set('n', '<Esc>', '<Cmd>noh<CR>')
 vim.keymap.set('n', '<leader>b', '<Cmd>b#<CR>')
 
 -- Toggle fullscreen for current buffer
-function toggle_fullscreen_buffer()
+function toggle_fullscreen_bffer()
 	-- autosave feature
     --[[ if vim.bo.modified then
         vim.cmd('update')
@@ -41,4 +41,15 @@ function toggle_fullscreen_buffer()
 end
 
 vim.api.nvim_set_keymap('n', '<leader>sf', ':lua toggle_fullscreen_buffer()<CR>', { noremap = true, silent = true })
+
+-- Enable macos clipboard for neovide
+if vim.g.neovide then
+  local function save() vim.cmd.write() end
+  local function copy() vim.cmd([[normal! "+y]]) end
+  local function paste() vim.api.nvim_paste(vim.fn.getreg("+"), true, -1) end
+
+  vim.keymap.set({ "n", "i", "v" }, "<D-s>", save, { desc = "Save" })
+  vim.keymap.set("v", "<D-c>", copy, { silent = true, desc = "Copy" })
+  vim.keymap.set({ "n", "i", "v", "c", "t" }, "<D-v>", paste, { silent = true, desc = "Paste" })
+end
 
