@@ -17,6 +17,7 @@ return {
 			direction = "float",
 			float_opts = { border = "double" },
 			on_open = function(term)
+                vim.schedule(function() vim.cmd("startinsert!") end)
 				vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = term.bufnr, noremap = true, silent = true })
 			end,
 			on_close = function() vim.cmd("startinsert!") end,
@@ -26,6 +27,7 @@ return {
 			direction = "float",
 			float_opts = { border = "double" },
 			on_open = function(term)
+                vim.schedule(function() vim.cmd("startinsert!") end)
 				-- <D-i> for Neovide / Alacritty (kitty keyboard protocol); <M-i> for inside tmux
 				local close_term = [[<C-\><C-n> <bar> <Cmd>close<CR>]]
 				vim.keymap.set("t", "<D-i>", close_term, { buffer = term.bufnr, noremap = true, silent = true })
