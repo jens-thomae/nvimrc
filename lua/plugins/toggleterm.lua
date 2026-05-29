@@ -6,7 +6,7 @@ return {
 			shade_terminals = true,
 			size = 80,
 			start_in_insert = true,
-			persist_mode = false,
+			persist_mode = true,
 		})
 
 		local Terminal = require("toggleterm.terminal").Terminal
@@ -27,11 +27,15 @@ return {
 			direction = "float",
 			float_opts = { border = "double" },
 			on_open = function(term)
-                vim.schedule(function() vim.cmd("startinsert!") end)
+				vim.schedule(function() vim.cmd("startinsert!") end)
 				-- <D-i> for Neovide / Alacritty (kitty keyboard protocol); <M-i> for inside tmux
-				local close_term = [[<C-\><C-n> <bar> <Cmd>close<CR>]]
-				vim.keymap.set("t", "<D-i>", close_term, { buffer = term.bufnr, noremap = true, silent = true })
-				vim.keymap.set("t", "<M-i>", close_term, { buffer = term.bufnr, noremap = true, silent = true })
+				local opts = { buffer = term.bufnr, noremap = true, silent = true }
+				-- From terminal mode: exit to normal first, then close.
+				vim.keymap.set("t", "<D-i>", [[<C-\><C-n><Cmd>close<CR>]], opts)
+				vim.keymap.set("t", "<M-i>", [[<C-\><C-n><Cmd>close<CR>]], opts)
+				-- From normal mode (e.g. after scrolling): close directly in one press.
+				vim.keymap.set("n", "<D-i>", "<Cmd>close<CR>", opts)
+				vim.keymap.set("n", "<M-i>", "<Cmd>close<CR>", opts)
 			end,
 			on_close = function() vim.cmd("startinsert!") end,
 		})
